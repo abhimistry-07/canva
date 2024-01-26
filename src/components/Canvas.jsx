@@ -29,7 +29,7 @@ let data = {
 const Canvas = () => {
   const [caption, setCaption] = useState(data.caption.text);
   const [cta, setCta] = useState(data.cta.text);
-  const [backgroundColor, setBackgroundColor] = useState("#ffffff");
+  const [backgroundColor, setBackgroundColor] = useState("#0369A1");
   const [selectedImage, setSelectedImage] = useState(null);
 
   const handleImageChange = (event) => {
@@ -51,6 +51,93 @@ const Canvas = () => {
     marginBottom: "5px",
     display: "block",
   };
+
+  const breakStatement = (text, maxCharPerLine) => {
+    let lines = [];
+    let currLine = "";
+    let words = text.split(" ");
+
+    for (let i = 0; i < words.length; i++) {
+      let word = words[i];
+
+      if (currLine.length + word.length <= maxCharPerLine) {
+        currLine += (currLine.length > 0 ? " " : "") + word;
+      } else {
+        lines.push(currLine);
+        currLine = word;
+      }
+    }
+
+    if (currLine.length > 0) {
+      lines.push(currLine);
+    }
+
+    return lines;
+    // console.log(lines);
+  };
+
+  const lines = breakStatement(caption, data.caption.max_characters_per_line);
+
+  const CanvasContainer = styled.div`
+    position: relative;
+    height: 1080px;
+    width: 1080px;
+    background-color: ${backgroundColor};
+  `;
+
+  const DesignPattern = styled.div`
+    position: absolute;
+    /* top: 0; */
+    /* left: 0; */
+    width: 100%;
+    height: 100%;
+    background-image: url(${data.urls.design_pattern});
+    background-repeat: no-repeat;
+    background-size: cover;
+  `;
+
+  const MaskLayer = styled.div`
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: url(${selectedImage ? selectedImage : data.urls.mask});
+    background-repeat: no-repeat;
+    background-position: center bottom;
+    /* background-size: 100% auto; */
+    /* background-size: contain; */
+    mask-image: url(${data.urls.mask});
+    mask-size: cover;
+  `;
+
+  const StrokeLayer = styled.div`
+    position: absolute;
+    top: -2px;
+    left: 2px;
+    width: 100%;
+    height: 100%;
+    background-image: url(${data.urls.stroke});
+    background-repeat: no-repeat;
+    background-size: cover;
+  `;
+
+  const TextLayer = styled.div`
+    position: absolute;
+    /* top: ${data.caption.position.y}px; */
+    left: ${data.caption.position.x}px;
+    font-size: ${data.caption.font_size}px;
+    color: ${data.caption.text_color};
+  `;
+
+  // const Img = styled.img`
+  //   position: absolute;
+  //   height: 594px;
+  //   width: 968px;
+  //   top: 440px;
+  //   left: 58px;
+  //   object-fit: cover;
+  // `;
+
+  // console.log(cta, ">>>>>>>");
 
   return (
     <Container>
@@ -97,12 +184,54 @@ const Canvas = () => {
           />
         </div>
       </EditorContainer>
-      <CanvasContainer></CanvasContainer>
+      <CanvasContainer>
+        <DesignPattern />
+        {/* <Img src={selectedImage ? selectedImage : data.urls.mask} alt="" /> */}
+        <MaskLayer />
+        <StrokeLayer />
+        {lines?.map((line, index) => (
+          <>
+            <TextLayer
+              key={index}
+              style={{
+                top: `${
+                  data.caption.position.y + index * data.caption.font_size
+                }px`,
+              }}
+            >
+              {line}
+            </TextLayer>
+          </>
+        ))}
+        <CTA>{cta}</CTA>
+      </CanvasContainer>
     </Container>
   );
 };
 
-export default Canvas;
+//  cta: {
+//     text: "Shop Now",
+//     position: { x: 190, y: 320 },
+//     text_color: "#FFFFFF",
+//     background_color: "#000000",
+//   }
+
+const CTA = styled.button`
+  position: absolute;
+  /* margin-top: 200px; */
+  top: ${data.cta.position.y}px;
+  left: ${data.cta.position.x}px;
+  background-color: ${data.cta.background_color};
+  color: ${data.cta.text_color};
+  padding: 15px;
+  border-radius: 15px;
+  font-size: 30px;
+  min-width: 20px;
+
+  &:hover {
+    cursor: pointer;
+  }
+`;
 
 const Container = styled.div`
   display: flex;
@@ -127,8 +256,4 @@ const InputField = styled.input`
   margin-bottom: 10px;
 `;
 
-const CanvasContainer = styled.div`
-  height: 1080px;
-  width: 1080px;
-  border: 1px solid red;
-`;
+export default Canvas;
