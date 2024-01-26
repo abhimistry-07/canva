@@ -31,6 +31,7 @@ const Canvas = () => {
   const [cta, setCta] = useState(data.cta.text);
   const [backgroundColor, setBackgroundColor] = useState("#0369A1");
   const [selectedImage, setSelectedImage] = useState(null);
+  const [allColors, setColors] = useState([]);
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -78,66 +79,20 @@ const Canvas = () => {
 
   const lines = breakStatement(caption, data.caption.max_characters_per_line);
 
-  const CanvasContainer = styled.div`
-    position: relative;
-    height: 1080px;
-    width: 1080px;
-    background-color: ${backgroundColor};
-  `;
+  const saveAndChangeColor = (event) => {
+    let currColor = event.target.value;
+    setBackgroundColor(currColor);
 
-  const DesignPattern = styled.div`
-    position: absolute;
-    /* top: 0; */
-    /* left: 0; */
-    width: 100%;
-    height: 100%;
-    background-image: url(${data.urls.design_pattern});
-    background-repeat: no-repeat;
-    background-size: cover;
-  `;
+    event.target.value = "+";
 
-  const MaskLayer = styled.div`
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-image: url(${selectedImage ? selectedImage : data.urls.mask});
-    background-repeat: no-repeat;
-    background-position: center bottom;
-    /* background-size: 100% auto; */
-    /* background-size: contain; */
-    mask-image: url(${data.urls.mask});
-    mask-size: cover;
-  `;
+    if (allColors.length < 5) {
+      setColors((prevColors) => [...prevColors, currColor]);
+    } else {
+      setColors((prevColors) => [...prevColors.splice(1), currColor]);
+    }
+  };
 
-  const StrokeLayer = styled.div`
-    position: absolute;
-    top: -2px;
-    left: 2px;
-    width: 100%;
-    height: 100%;
-    background-image: url(${data.urls.stroke});
-    background-repeat: no-repeat;
-    background-size: cover;
-  `;
-
-  const TextLayer = styled.div`
-    position: absolute;
-    /* top: ${data.caption.position.y}px; */
-    left: ${data.caption.position.x}px;
-    font-size: ${data.caption.font_size}px;
-    color: ${data.caption.text_color};
-  `;
-
-  // const Img = styled.img`
-  //   position: absolute;
-  //   height: 594px;
-  //   width: 968px;
-  //   top: 440px;
-  //   left: 58px;
-  //   object-fit: cover;
-  // `;
-
-  // console.log(cta, ">>>>>>>");
+  // console.log(allColors, ">>>>>>>");
 
   return (
     <Container>
@@ -176,32 +131,45 @@ const Canvas = () => {
           />
         </div>
         <div style={{ marginBottom: "20px" }}>
-          <label style={labelStyle}>Background Color:</label>
-          <input
-            type="color"
-            value={backgroundColor}
-            onChange={(e) => setBackgroundColor(e.target.value)}
-          />
+          <label style={labelStyle}>Choose your color:</label>
+          <div style={{ display: "flex", gap: "10px" }}>
+            {allColors?.map((color, index) => (
+              <Colors
+                key={index}
+                style={{ backgroundColor: `${color}` }}
+              ></Colors>
+            ))}
+            <input
+              style={{ borderRadius: "100%", width: "20px", height: "20px" }}
+              type="color"
+              value={backgroundColor}
+              onChange={saveAndChangeColor}
+            ></input>
+          </div>
         </div>
       </EditorContainer>
-      <CanvasContainer>
+      <CanvasContainer style={{ backgroundColor: `${backgroundColor}` }}>
         <DesignPattern />
         {/* <Img src={selectedImage ? selectedImage : data.urls.mask} alt="" /> */}
-        <MaskLayer />
+        <MaskLayer
+          style={{
+            backgroundImage: `url(${
+              selectedImage ? selectedImage : data.urls.mask
+            })`,
+          }}
+        />
         <StrokeLayer />
         {lines?.map((line, index) => (
-          <>
-            <TextLayer
-              key={index}
-              style={{
-                top: `${
-                  data.caption.position.y + index * data.caption.font_size
-                }px`,
-              }}
-            >
-              {line}
-            </TextLayer>
-          </>
+          <TextLayer
+            key={index}
+            style={{
+              top: `${
+                data.caption.position.y + index * data.caption.font_size
+              }px`,
+            }}
+          >
+            {line}
+          </TextLayer>
         ))}
         <CTA>{cta}</CTA>
       </CanvasContainer>
@@ -209,12 +177,12 @@ const Canvas = () => {
   );
 };
 
-//  cta: {
-//     text: "Shop Now",
-//     position: { x: 190, y: 320 },
-//     text_color: "#FFFFFF",
-//     background_color: "#000000",
-//   }
+const Colors = styled.div`
+  width: 20px;
+  border-radius: 100%;
+  height: 20px;
+  /* background-color: red; */
+`;
 
 const CTA = styled.button`
   position: absolute;
@@ -254,6 +222,63 @@ const InputField = styled.input`
   padding: 8px;
   width: 98%;
   margin-bottom: 10px;
+`;
+
+const CanvasContainer = styled.div`
+  position: relative;
+  height: 1080px;
+  width: 1080px;
+`;
+
+const DesignPattern = styled.div`
+  position: absolute;
+  /* top: 0; */
+  /* left: 0; */
+  width: 100%;
+  height: 100%;
+  background-image: url(${data.urls.design_pattern});
+  background-repeat: no-repeat;
+  background-size: cover;
+`;
+
+// const Img = styled.img`
+//   position: absolute;
+//   height: 594px;
+//   width: 968px;
+//   top: 440px;
+//   left: 58px;
+//   object-fit: cover;
+// `;
+
+const MaskLayer = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  /* background-size: 100% auto; */
+  /* background-size: contain; */
+  mask-image: url(${data.urls.mask});
+  mask-size: cover;
+`;
+
+const StrokeLayer = styled.div`
+  position: absolute;
+  top: -2px;
+  left: 2px;
+  width: 100%;
+  height: 100%;
+  background-image: url(${data.urls.stroke});
+  background-repeat: no-repeat;
+  background-size: cover;
+`;
+
+const TextLayer = styled.div`
+  position: absolute;
+  /* top: ${data.caption.position.y}px; */
+  left: ${data.caption.position.x}px;
+  font-size: ${data.caption.font_size}px;
+  color: ${data.caption.text_color};
 `;
 
 export default Canvas;
