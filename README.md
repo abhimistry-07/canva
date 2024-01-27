@@ -47,7 +47,7 @@ The frontend of this project is built using React, a popular JavaScript library 
 ### Frontend
 
 - React
-- Styled Components and Chakra UI (for CSS)
+- Styled Components(for CSS)
 
 ---
 
