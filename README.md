@@ -1,70 +1,76 @@
-# Getting Started with Create React App
+# Canva
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Canva editor built using React and Styled components used for the CSS. Here you can upload any image, change the caption and cta and also change background color.
 
-## Available Scripts
+## Table of Contents
 
-In the project directory, you can run:
+1. [Installation](#installation)
+2. [Frontend](#frontend)
+3. [Technologies Used](#technologies-used)
+4. [Deployed Link](#deployed-link)
+5. [Screenshots](#screenshots)
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Installation
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+To set up the Canva app locally, follow these steps:
 
-### `npm test`
+1. Clone this repository to your local machine using the following command:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+   ```shell
+    git clone https://github.com/abhimistry-07/canva
+   ```
 
-### `npm run build`
+2. Install the required dependencies by running:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+   ```shell
+   npm install
+   ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+3. Start the application:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+   ```shell
+   npm start
+   ```
 
-### `npm run eject`
+4. Access the platform by visiting http://localhost:3000 in your web browser.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Frontend
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The frontend of this project is built using React, a popular JavaScript library for building user interfaces. It includes features like add image, update caption, update cta, and change back ground color. Used styled components for creating a visually appealing user interface.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+---
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Technologies Used
 
-## Learn More
+### Frontend
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- React
+- Styled Components and Chakra UI (for CSS)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
 
-### Code Splitting
+## Deployed Link
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Frontend: https://canva-beta.vercel.app/
 
-### Analyzing the Bundle Size
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Screenshots
 
-### Making a Progressive Web App
+### 1. Before:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+![before](https://github.com/abhimistry-07/canva/blob/main/src/assets/Form%20Before.jpg)
 
-### Advanced Configuration
+![before](https://github.com/abhimistry-07/canva/blob/main/src/assets/Canvas%20before.jpg)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### 2. After:
 
-### Deployment
+![after](https://github.com/abhimistry-07/canva/blob/main/src/assets/Form%20after.jpg)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+![after](https://github.com/abhimistry-07/canva/blob/main/src/assets/canvas%20after.jpg)
 
-### `npm run build` fails to minify
+![after](https://github.com/abhimistry-07/canva/blob/main/src/assets/canvas%202.jpg)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+---
