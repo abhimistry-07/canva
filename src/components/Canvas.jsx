@@ -35,6 +35,7 @@ const Canvas = () => {
   const [allColors, setColors] = useState([]);
   const [displayColorPicker, setDisplayColorPicker] = useState(false);
 
+  // handles selection of image
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     const reader = new FileReader();
@@ -48,13 +49,7 @@ const Canvas = () => {
     }
   };
 
-  const labelStyle = {
-    fontSize: "0.875rem",
-    fontWeight: "medium",
-    marginBottom: "5px",
-    display: "block",
-  };
-
+  // breaking statement to 31 words
   const breakStatement = (text, maxCharPerLine) => {
     let lines = [];
     let currLine = "";
@@ -81,6 +76,7 @@ const Canvas = () => {
 
   const lines = breakStatement(caption, data.caption.max_characters_per_line);
 
+  // saves 5 used colors
   const saveAndChangeColor = (color, event) => {
     let currColor = color.hex;
 
@@ -96,6 +92,14 @@ const Canvas = () => {
   };
 
   // console.log(displayColorPicker, ">>>>>>>");
+
+  const labelStyle = {
+    fontSize: "0.875rem",
+    fontWeight: "medium",
+    marginBottom: "5px",
+    display: "block",
+  };
+
   const popover = {
     position: "absolute",
     zIndex: "2",
@@ -150,9 +154,23 @@ const Canvas = () => {
 
           <div style={{ display: "flex", gap: "10px" }}>
             {allColors?.map((color, index) => (
-              <Colors key={index} style={{ backgroundColor: `${color}` }} />
+              <div
+                style={{
+                  border:
+                    index === allColors.length - 1 ? "1px solid red" : "none",
+                  padding: index === allColors.length - 1 ? "1px" : "0",
+                  borderRadius: "50%",
+                }}
+                key={index}
+              >
+                <Colors
+                  style={{
+                    backgroundColor: `${color}`,
+                  }}
+                  isLast={index === allColors.length - 1}
+                />
+              </div>
             ))}
-
             {/* <input
               id="colorInput"
               style={{ display: "none" }}
@@ -221,21 +239,23 @@ const Canvas = () => {
 
 const Colors = styled.div`
   width: 20px;
-  border-radius: 100%;
+  border-radius: 50%;
   height: 20px;
+  /* box-sizing: border-box; */
 `;
 
 const CTA = styled.button`
   position: absolute;
-  /* margin-top: 200px; */
   top: ${data.cta.position.y}px;
   left: ${data.cta.position.x}px;
   background-color: ${data.cta.background_color};
   color: ${data.cta.text_color};
   padding: 15px;
   border-radius: 15px;
-  font-size: 30px;
+  font-size: ${data.cta.font_size || 30}px;
   min-width: 20px;
+  text-align: center;
+  vertical-align: middle;
 
   &:hover {
     cursor: pointer;
@@ -255,6 +275,7 @@ const EditorContainer = styled.div`
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   width: 80%;
+  margin-top: 50px;
 `;
 
 const InputField = styled.input`
@@ -269,12 +290,11 @@ const CanvasContainer = styled.div`
   position: relative;
   height: 1080px;
   width: 1080px;
+  margin: 50px 0;
 `;
 
 const DesignPattern = styled.div`
   position: absolute;
-  /* top: 0; */
-  /* left: 0; */
   width: 100%;
   height: 100%;
   background-image: url(${data.urls.design_pattern});
@@ -297,8 +317,6 @@ const MaskLayer = styled.div`
   height: 100%;
   background-repeat: no-repeat;
   background-position: center bottom;
-  /* background-size: 100% auto; */
-  /* background-size: contain; */
   mask-image: url(${data.urls.mask});
   mask-size: cover;
 `;
@@ -316,7 +334,7 @@ const StrokeLayer = styled.div`
 
 const TextLayer = styled.div`
   position: absolute;
-  /* top: ${data.caption.position.y}px; */
+  top: ${data.caption.position.y}px;
   left: ${data.caption.position.x}px;
   font-size: ${data.caption.font_size}px;
   color: ${data.caption.text_color};
