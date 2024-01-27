@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { SketchPicker } from "react-color";
 
 let data = {
   caption: {
@@ -32,6 +33,7 @@ const Canvas = () => {
   const [backgroundColor, setBackgroundColor] = useState("#0369A1");
   const [selectedImage, setSelectedImage] = useState(null);
   const [allColors, setColors] = useState([]);
+  const [displayColorPicker, setDisplayColorPicker] = useState(false);
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -79,11 +81,12 @@ const Canvas = () => {
 
   const lines = breakStatement(caption, data.caption.max_characters_per_line);
 
-  const saveAndChangeColor = (event) => {
-    let currColor = event.target.value;
-    setBackgroundColor(currColor);
+  const saveAndChangeColor = (color, event) => {
+    let currColor = color.hex;
 
-    event.target.value = "+";
+    // console.log(currColor);
+    // setBackgroundColor(currColor);
+    // setDisplayColorPicker(false);
 
     if (allColors.length < 5) {
       setColors((prevColors) => [...prevColors, currColor]);
@@ -92,7 +95,19 @@ const Canvas = () => {
     }
   };
 
-  // console.log(allColors, ">>>>>>>");
+  // console.log(displayColorPicker, ">>>>>>>");
+  const popover = {
+    position: "absolute",
+    zIndex: "2",
+  };
+
+  const cover = {
+    position: "relative",
+    top: "40px",
+    // right: "0px",
+    // bottom: "-20px",
+    // left: "0px",
+  };
 
   return (
     <Container>
@@ -132,19 +147,46 @@ const Canvas = () => {
         </div>
         <div style={{ marginBottom: "20px" }}>
           <label style={labelStyle}>Choose your color:</label>
+
           <div style={{ display: "flex", gap: "10px" }}>
             {allColors?.map((color, index) => (
-              <Colors
-                key={index}
-                style={{ backgroundColor: `${color}` }}
-              ></Colors>
+              <Colors key={index} style={{ backgroundColor: `${color}` }} />
             ))}
-            <input
-              style={{ borderRadius: "100%", width: "20px", height: "20px" }}
+
+            {/* <input
+              id="colorInput"
+              style={{ display: "none" }}
               type="color"
               value={backgroundColor}
               onChange={saveAndChangeColor}
-            ></input>
+            /> */}
+            <button
+              style={{
+                width: "20px",
+                height: "20px",
+                borderRadius: "100%",
+                cursor: "pointer",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                background: "transparent",
+              }}
+              onClick={() => setDisplayColorPicker((prev) => !prev)}
+              // onClick={() => document.getElementById("colorInput").click()}
+            >
+              +
+            </button>
+            {displayColorPicker ? (
+              <div style={popover} onClick={() => setDisplayColorPicker(false)}>
+                <div style={cover}>
+                  <SketchPicker
+                    color={backgroundColor}
+                    onChange={saveAndChangeColor}
+                    onChangeComplete={(color) => setBackgroundColor(color.hex)}
+                  />
+                </div>
+              </div>
+            ) : null}
           </div>
         </div>
       </EditorContainer>
@@ -181,7 +223,6 @@ const Colors = styled.div`
   width: 20px;
   border-radius: 100%;
   height: 20px;
-  /* background-color: red; */
 `;
 
 const CTA = styled.button`
