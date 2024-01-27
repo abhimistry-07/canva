@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { SketchPicker } from "react-color";
+import EditPart from "./EditPart";
 
 let data = {
   caption: {
@@ -35,20 +35,6 @@ const Canvas = () => {
   const [allColors, setColors] = useState([]);
   const [displayColorPicker, setDisplayColorPicker] = useState(false);
 
-  // handles selection of image
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-
-    reader.onload = () => {
-      setSelectedImage(reader.result);
-    };
-
-    if (file) {
-      reader.readAsDataURL(file);
-    }
-  };
-
   // breaking statement to 31 words
   const breakStatement = (text, maxCharPerLine) => {
     let lines = [];
@@ -76,138 +62,57 @@ const Canvas = () => {
 
   const lines = breakStatement(caption, data.caption.max_characters_per_line);
 
-  // saves 5 used colors
-  const saveAndChangeColor = (color, event) => {
-    let currColor = color.hex;
+  const handlers = {
+    handleCaption: (event) => {
+      // console.log(event);
+      setCaption(event);
+    },
+    handleCTA: (event) => {
+      setCta(event);
+    },
+    handleImageChange: (event) => {
+      const file = event;
+      // console.log(event, ">>>>>>");
+      const reader = new FileReader();
 
-    // console.log(currColor);
-    // setBackgroundColor(currColor);
-    // setDisplayColorPicker(false);
+      reader.onload = () => {
+        setSelectedImage(reader.result);
+      };
 
-    if (allColors.length < 5) {
-      setColors((prevColors) => [...prevColors, currColor]);
-    } else {
-      setColors((prevColors) => [...prevColors.splice(1), currColor]);
-    }
-  };
+      if (file) {
+        reader.readAsDataURL(file);
+      }
+    },
+    handleColorPickerToShow: (prev) => {
+      setDisplayColorPicker(!prev);
+    },
+    handleBackgroundColor: (prev) => {
+      // console.log(prev, ">>>>>>>");
+      setBackgroundColor(prev);
+    },
+    saveAndChangeColor: (color, event) => {
+      let currColor = color.hex;
 
-  // console.log(displayColorPicker, ">>>>>>>");
+      // console.log(currColor);
+      // setBackgroundColor(currColor);
+      // setDisplayColorPicker(false);
 
-  const labelStyle = {
-    fontSize: "0.875rem",
-    fontWeight: "medium",
-    marginBottom: "5px",
-    display: "block",
-  };
-
-  const popover = {
-    position: "absolute",
-    zIndex: "2",
-  };
-
-  const cover = {
-    position: "relative",
-    top: "40px",
-    // right: "0px",
-    // bottom: "-20px",
-    // left: "0px",
+      if (allColors.length < 5) {
+        setColors((prevColors) => [...prevColors, currColor]);
+      } else {
+        setColors((prevColors) => [...prevColors.splice(1), currColor]);
+      }
+    },
+    caption: caption,
+    cta: cta,
+    allColors: allColors,
+    displayColorPicker: displayColorPicker,
+    backgroundColor: backgroundColor,
   };
 
   return (
     <Container>
-      <EditorContainer>
-        <h1
-          style={{
-            fontSize: "1.5rem",
-            fontWeight: "bold",
-            marginBottom: "20px",
-          }}
-        >
-          Canvas Editor
-        </h1>
-        <div style={{ marginBottom: "20px" }}>
-          <label style={labelStyle}>Select Image:</label>
-          <InputField
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-          />
-        </div>
-        <div style={{ marginBottom: "20px" }}>
-          <label style={labelStyle}>Caption:</label>
-          <InputField
-            type="text"
-            value={caption}
-            onChange={(e) => setCaption(e.target.value)}
-          />
-        </div>
-        <div style={{ marginBottom: "20px" }}>
-          <label style={labelStyle}>Call to Action:</label>
-          <InputField
-            type="text"
-            value={cta}
-            onChange={(e) => setCta(e.target.value)}
-          />
-        </div>
-        <div style={{ marginBottom: "20px" }}>
-          <label style={labelStyle}>Choose your color:</label>
-
-          <div style={{ display: "flex", gap: "10px" }}>
-            {allColors?.map((color, index) => (
-              <div
-                style={{
-                  border:
-                    index === allColors.length - 1 ? "1px solid red" : "none",
-                  padding: index === allColors.length - 1 ? "1px" : "0",
-                  borderRadius: "50%",
-                }}
-                key={index}
-              >
-                <Colors
-                  style={{
-                    backgroundColor: `${color}`,
-                  }}
-                  isLast={index === allColors.length - 1}
-                />
-              </div>
-            ))}
-            {/* <input
-              id="colorInput"
-              style={{ display: "none" }}
-              type="color"
-              value={backgroundColor}
-              onChange={saveAndChangeColor}
-            /> */}
-            <button
-              style={{
-                width: "20px",
-                height: "20px",
-                borderRadius: "100%",
-                cursor: "pointer",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                background: "transparent",
-              }}
-              onClick={() => setDisplayColorPicker((prev) => !prev)}
-              // onClick={() => document.getElementById("colorInput").click()}
-            >
-              +
-            </button>
-            {displayColorPicker ? (
-              <div style={popover} onClick={() => setDisplayColorPicker(false)}>
-                <div style={cover}>
-                  <SketchPicker
-                    color={backgroundColor}
-                    onChange={saveAndChangeColor}
-                    onChangeComplete={(color) => setBackgroundColor(color.hex)}
-                  />
-                </div>
-              </div>
-            ) : null}
-          </div>
-        </div>
-      </EditorContainer>
+      <EditPart handlers={handlers} />
       <CanvasContainer style={{ backgroundColor: `${backgroundColor}` }}>
         <DesignPattern />
         {/* <Img src={selectedImage ? selectedImage : data.urls.mask} alt="" /> */}
@@ -237,13 +142,6 @@ const Canvas = () => {
   );
 };
 
-const Colors = styled.div`
-  width: 20px;
-  border-radius: 50%;
-  height: 20px;
-  /* box-sizing: border-box; */
-`;
-
 const CTA = styled.button`
   position: absolute;
   top: ${data.cta.position.y}px;
@@ -268,22 +166,6 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   background-color: #f0f0f0;
-`;
-
-const EditorContainer = styled.div`
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  width: 80%;
-  margin-top: 50px;
-`;
-
-const InputField = styled.input`
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 8px;
-  width: 98%;
-  margin-bottom: 10px;
 `;
 
 const CanvasContainer = styled.div`
